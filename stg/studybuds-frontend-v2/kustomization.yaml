@@ -1,0 +1,10 @@
+images:
+- name: studybuds-frontend-v2
+  newName: 992382824131.us-east-2.amazonaws.com/studybuds-frontend-v2
+  newTag: 32113b39ae4a4d032820075ad3cff7c5be68a4f1
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yaml

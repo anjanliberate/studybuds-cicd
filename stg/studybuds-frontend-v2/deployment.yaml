@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: studybuds-frontend-v2-deployment
+  namespace: development
+  labels:
+    app: studybuds-frontend-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: studybuds-frontend-v2
+  template:
+    metadata:
+      labels:
+        app: studybuds-frontend-v2
+    spec:
+      containers:
+      - name: studybuds-frontend-v2
+        image: nginx
+        ports:
+        - containerPort: 80      
+        securityContext:
+          allowPrivilegeEscalation: false         
+      nodeSelector:
+        environment: development    
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: studybuds-frontend-v2-service
+  namespace: development
+spec:
+  type: ClusterIP
+  selector:
+    app: studybuds-frontend-v2
+  ports:
+  - protocol: TCP
+    port: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: studybuds-frontend-v2-ingress
+  namespace: development
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    # nginx.ingress.kubernetes.io/whitelist-source-range: 118.179.202.217/29
+spec:
+  rules:
+  - host: staging.studybuds.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: studybuds-frontend-v2-service
+            port:
+              number: 80
+
+
+
+
